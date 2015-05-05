@@ -1,0 +1,11 @@
+C:\Users\yincu_000\Desktop\IOCPDemo_NET_V4\Bin\NETUploadClient.exe.config
+C:\Users\yincu_000\Desktop\IOCPDemo_NET_V4\Bin\NETUploadClient.exe.manifest
+C:\Users\yincu_000\Desktop\IOCPDemo_NET_V4\Bin\NETUploadClient.application
+C:\Users\yincu_000\Desktop\IOCPDemo_NET_V4\Bin\NETUploadClient.exe
+C:\Users\yincu_000\Desktop\IOCPDemo_NET_V4\Bin\NETUploadClient.pdb
+C:\Users\yincu_000\Desktop\IOCPDemo_NET_V4\NET_Source\NETUploadClient\obj\Debug\NETUploadClient.csprojResolveAssemblyReference.cache
+C:\Users\yincu_000\Desktop\IOCPDemo_NET_V4\NET_Source\NETUploadClient\obj\Debug\NETUploadClient.TrustInfo.xml
+C:\Users\yincu_000\Desktop\IOCPDemo_NET_V4\NET_Source\NETUploadClient\obj\Debug\NETUploadClient.exe.manifest
+C:\Users\yincu_000\Desktop\IOCPDemo_NET_V4\NET_Source\NETUploadClient\obj\Debug\NETUploadClient.application
+C:\Users\yincu_000\Desktop\IOCPDemo_NET_V4\NET_Source\NETUploadClient\obj\Debug\NETUploadClient.exe
+C:\Users\yincu_000\Desktop\IOCPDemo_NET_V4\NET_Source\NETUploadClient\obj\Debug\NETUploadClient.pdb

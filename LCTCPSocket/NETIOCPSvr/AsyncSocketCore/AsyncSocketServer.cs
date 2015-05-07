@@ -17,9 +17,7 @@ namespace AsyncSocketServer
         public int SocketTimeOutMS { get; set; }
         private AsyncSocketUserTokenPool m_asyncSocketUserTokenPool;
         public AsyncSocketUserTokenList AsyncSocketUserTokenList { get; private set; }
-        public LogOutputSocketProtocolMgr LogOutputSocketProtocolMgr { get; private set; }
         public UploadSocketProtocolMgr UploadSocketProtocolMgr { get; private set; }
-        public DownloadSocketProtocolMgr DownloadSocketProtocolMgr { get; private set; }
 
         private DaemonThread m_daemonThread;
 
@@ -31,10 +29,7 @@ namespace AsyncSocketServer
             m_asyncSocketUserTokenPool = new AsyncSocketUserTokenPool(numConnections);
             AsyncSocketUserTokenList = new AsyncSocketUserTokenList();
             m_maxNumberAcceptedClients = new Semaphore(numConnections, numConnections);
-
-            LogOutputSocketProtocolMgr = new LogOutputSocketProtocolMgr();
             UploadSocketProtocolMgr = new UploadSocketProtocolMgr();
-            DownloadSocketProtocolMgr = new DownloadSocketProtocolMgr();
         }
 
         /// <summary>
@@ -183,7 +178,6 @@ namespace AsyncSocketServer
                 //（确定是什么协议，用于绑定上线客户端，以后来的就都走这个socket）存在Socket对象，并且没有绑定协议对象，则进行协议对象绑定
                 if ((userToken.AsyncSocketInvokeElement == null) & (userToken.ConnectSocket != null)) 
                 {
-                    //查找是哪一个协议
                     BuildingSocketInvokeElement(userToken);
                     offset = offset + 1;
                     count = count - 1;
@@ -232,16 +226,6 @@ namespace AsyncSocketServer
             byte flag = userToken.ReceiveEventArgs.Buffer[userToken.ReceiveEventArgs.Offset];
             if (flag == (byte)ProtocolFlag.Upload)
                 userToken.AsyncSocketInvokeElement = new UploadSocketProtocol(this, userToken);
-            else if (flag == (byte)ProtocolFlag.Download)
-                userToken.AsyncSocketInvokeElement = new DownloadSocketProtocol(this, userToken);
-            else if (flag == (byte)ProtocolFlag.RemoteStream)
-                userToken.AsyncSocketInvokeElement = new RemoteStreamSocketProtocol(this, userToken);
-            else if (flag == (byte)ProtocolFlag.Throughput)
-                userToken.AsyncSocketInvokeElement = new ThroughputSocketProtocol(this, userToken);
-            else if (flag == (byte)ProtocolFlag.Control)
-                userToken.AsyncSocketInvokeElement = new ControlSocketProtocol(this, userToken);
-            else if (flag == (byte)ProtocolFlag.LogOutput)
-                userToken.AsyncSocketInvokeElement = new LogOutputSocketProtocol(this, userToken);
             if (userToken.AsyncSocketInvokeElement != null)
             {
                 //Program.Logger.InfoFormat("Building socket invoke element {0}.Local Address: {1}, Remote Address: {2}", userToken.AsyncSocketInvokeElement, userToken.ConnectSocket.LocalEndPoint, userToken.ConnectSocket.RemoteEndPoint);

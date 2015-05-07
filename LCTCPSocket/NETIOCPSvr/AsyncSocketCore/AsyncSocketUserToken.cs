@@ -11,7 +11,7 @@ namespace AsyncSocketServer
         public SocketAsyncEventArgs ReceiveEventArgs { get; set; }
         protected byte[] m_asyncReceiveBuffer;
         public SocketAsyncEventArgs SendEventArgs { get; set; }
-        public DynamicBufferManager ReceiveBuffer { get; set; }
+        public DynamicBufferManager ReceiveBuffer { get; set; }//用于多包融合的情况，比如采集器采集需要10包合到一起再进行处理
         public AsyncSendBufferManager SendBuffer { get; set; }
         public AsyncSocketInvokeElement AsyncSocketInvokeElement { get; set; }
 

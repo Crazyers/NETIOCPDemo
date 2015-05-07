@@ -16,7 +16,6 @@ namespace AsyncSocketServer
         protected bool m_sendAsync; //标识是否有发送异步事件
         public DateTime ConnectDT { get; protected set; }
         public DateTime ActiveDT { get; protected set; }
-
         protected IncomingDataParser m_incomingDataParser; //协议解析器，用来解析客户端接收到的命令
         protected OutgoingDataAssembler m_outgoingDataAssembler; //协议组装器，用来组织服务端返回的命令
 
@@ -24,12 +23,10 @@ namespace AsyncSocketServer
         {
             m_asyncSocketServer = asyncSocketServer;
             AsyncSocketUserToken = asyncSocketUserToken;
-
             NetByteOrder = false;
 
             m_incomingDataParser = new IncomingDataParser();
             m_outgoingDataAssembler = new OutgoingDataAssembler();
-
             m_sendAsync = false;
 
             ConnectDT = DateTime.UtcNow;
@@ -41,68 +38,27 @@ namespace AsyncSocketServer
         }
 
         /// <summary>
-        /// 接收异步事件返回的数据，用于对数据进行缓存和分包，这是原始数据的包
+        /// 处理收到的包（根据不同的协议进行解析，解析完了以后进入队列）
         /// </summary>
         /// <param name="buffer"></param>
-        /// <param name="offset"></param>
-        /// <param name="count"></param>
         /// <returns></returns>
-        public virtual bool ProcessReceive(byte[] buffer, int offset, int count) 
+        public virtual bool ProcessReceive(byte[] buffer)
         {
             ActiveDT = DateTime.UtcNow;
-            DynamicBufferManager receiveBuffer = AsyncSocketUserToken.ReceiveBuffer;
-
-            receiveBuffer.WriteBuffer(buffer, offset, count);
-            bool result = true;
-            while (receiveBuffer.DataCount > sizeof(int))
-            {
-                //按照长度分包
-                int packetLength = BitConverter.ToInt32(receiveBuffer.Buffer, 0); //获取包长度
-                if (NetByteOrder)
-                    packetLength = System.Net.IPAddress.NetworkToHostOrder(packetLength); //把网络字节顺序转为本地字节顺序
-
-                if ((packetLength > 10 * 1024 * 1024) | (receiveBuffer.DataCount > 10 * 1024 * 1024)) //最大Buffer异常保护
-                    return false;
-
-                //收到的数据达到包长度，进行处理，否则不处理，等待下一个包继续写入缓存
-                if ((receiveBuffer.DataCount - sizeof(int)) >= packetLength)
-                {
-                    Analysis.IntTotalMsg++;
-                    //处理包
-                    result = ProcessPacket(receiveBuffer.Buffer, sizeof(int), packetLength);
-                    if (result)//处理完成，从缓存中清理
-                        receiveBuffer.Clear(packetLength + sizeof(int));
-                    else
-                        return result;
-                }
-                else
-                {
-                    return true;
-                }
-            }
-            return true;
+            Analysis.IntTotalMsg++;
+            //当前测试力创热表
+            bool result = ProcessPacket(buffer);
+            return result;
         }
 
         /// <summary>
-        /// 处理分完包后的数据，把命令和数据分开，并对命令进行解析
+        /// 子类集成处理解析数据的过程
         /// </summary>
         /// <param name="buffer"></param>
-        /// <param name="offset"></param>
-        /// <param name="count"></param>
         /// <returns></returns>
-        public virtual bool ProcessPacket(byte[] buffer, int offset, int count) 
+        public virtual bool ProcessPacket(byte[] buffer)
         {
-            if (count < sizeof(int))
-                return false;
-            int commandLen = BitConverter.ToInt32(buffer, offset); //取出命令长度
-            //分包完成后，把内存数组是UTF-8编码转换为Unicode，即为C#的string，后续的处理就都可以基于string进行处理，比较方便
-            string tmpStr = Encoding.UTF8.GetString(buffer, offset + sizeof(int), commandLen);
-            bool blnDecode = m_incomingDataParser.DecodeProtocolText(tmpStr);
-            if (!blnDecode) //解析命令
-              return false;
-
-            //处理命令，针对不同的命令进行处理
-            return ProcessCommand(buffer, offset + sizeof(int) + commandLen, count - sizeof(int) - commandLen); 
+            return true;
         }
 
         /// <summary>

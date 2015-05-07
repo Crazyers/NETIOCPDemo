@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Net.Sockets;
 
 namespace AsyncSocketServer
 {
-    public class ControlSocketProtocol : BaseSocketProtocol
+    /// <summary>
+    /// 力创热表协议
+    /// </summary>
+    public  class HeatLiChuang : BaseSocketProtocol
     {
-        public ControlSocketProtocol(AsyncSocketServer asyncSocketServer, AsyncSocketUserToken asyncSocketUserToken)
+        public HeatLiChuang(AsyncSocketServer asyncSocketServer, AsyncSocketUserToken asyncSocketUserToken)
             : base(asyncSocketServer, asyncSocketUserToken)
         {
             m_socketFlag = "Control";
@@ -19,7 +21,29 @@ namespace AsyncSocketServer
             base.Close();
         }
 
-        public override bool ProcessCommand(byte[] buffer, int offset, int count) //处理分完包的数据，子类从这个方法继承
+        /// <summary>
+        /// 集成自父类
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <returns></returns>
+        public override bool ProcessPacket(byte[] buffer)
+        {
+            CjdHeat heat = new CjdHeat();
+            //int commandLen = BitConverter.ToInt32(buffer, offset); //取出命令长度
+            //分包完成后，把内存数组是UTF-8编码转换为Unicode，即为C#的string，后续的处理就都可以基于string进行处理，比较方便
+            string tmpStr = Encoding.UTF8.GetString(buffer);
+            bool blnDecode = m_incomingDataParser.DecodeProtocolText(tmpStr);
+            return blnDecode;
+        }
+
+        /// <summary>
+        /// 处理分完包的数据，
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public override bool ProcessCommand(byte[] buffer, int offset, int count) 
         {
             ControlSocketCommand command = StrToCommand(m_incomingDataParser.Command);
             m_outgoingDataAssembler.Clear();
@@ -34,8 +58,6 @@ namespace AsyncSocketServer
                 return DoLogin();
             else if (command == ControlSocketCommand.Active)
                 return DoActive();
-            else if (command == ControlSocketCommand.GetClients)
-                return DoGetClients();
             else
             {
                 Program.Logger.Error("Unknow command: " + m_incomingDataParser.Command);
@@ -61,33 +83,6 @@ namespace AsyncSocketServer
                 return true;
             else
                 return m_logined;
-        }
-
-        public bool DoGetClients()
-        {
-            AsyncSocketUserToken[] userTokenArray = null;
-            m_asyncSocketServer.AsyncSocketUserTokenList.CopyList(ref userTokenArray);
-            m_outgoingDataAssembler.AddSuccess();
-            string socketText = "";
-            for (int i = 0; i < userTokenArray.Length; i++)
-            {
-                try
-                {
-                    socketText = userTokenArray[i].ConnectSocket.LocalEndPoint.ToString() + "\t"
-                        + userTokenArray[i].ConnectSocket.RemoteEndPoint.ToString() + "\t"
-                        + (userTokenArray[i].AsyncSocketInvokeElement as BaseSocketProtocol).SocketFlag + "\t"
-                        + (userTokenArray[i].AsyncSocketInvokeElement as BaseSocketProtocol).UserName + "\t"
-                        + userTokenArray[i].AsyncSocketInvokeElement.ConnectDT.ToString() + "\t"
-                        + userTokenArray[i].AsyncSocketInvokeElement.ActiveDT.ToString();
-                    m_outgoingDataAssembler.AddValue(ProtocolKey.Item, socketText);
-                }
-                catch (Exception E)
-                {
-                    Program.Logger.ErrorFormat("Get client error, message: {0}", E.Message);
-                    Program.Logger.Error(E.StackTrace);
-                }
-            }
-            return DoSendResult();
         }
     }
 }

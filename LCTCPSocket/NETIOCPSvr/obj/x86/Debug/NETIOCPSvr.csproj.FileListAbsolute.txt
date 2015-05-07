@@ -12,3 +12,4 @@ D:\GitHub\NETIOCPDemo\Bin\SocketAsyncSvr.pdb
 D:\GitHub\NETIOCPDemo\NET_Source\NETIOCPSvr\obj\x86\Debug\NETIOCPSvr.csprojResolveAssemblyReference.cache
 D:\GitHub\NETIOCPDemo\LCTCPSocket\NETIOCPSvr\obj\x86\Debug\SocketAsyncSvr.exe
 D:\GitHub\NETIOCPDemo\LCTCPSocket\NETIOCPSvr\obj\x86\Debug\SocketAsyncSvr.pdb
+D:\GitHub\NETIOCPDemo\LCTCPSocket\NETIOCPSvr\obj\x86\Debug\NETIOCPSvr.csprojResolveAssemblyReference.cache

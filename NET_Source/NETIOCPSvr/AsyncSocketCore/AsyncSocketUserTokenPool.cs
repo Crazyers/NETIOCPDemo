@@ -72,6 +72,11 @@ namespace AsyncSocketServer
             }
         }
 
+        public int Count()
+        {
+            return m_list.Count;
+        }
+
         public void CopyList(ref AsyncSocketUserToken[] array)
         {
             lock (m_list)

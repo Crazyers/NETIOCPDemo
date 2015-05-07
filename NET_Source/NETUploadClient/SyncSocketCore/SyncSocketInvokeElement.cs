@@ -20,7 +20,7 @@ namespace NETUploadClient.SyncSocketCore
         protected OutgoingDataAssembler m_outgoingDataAssembler; //协议组装器，用来组装往外发送的命令
         protected DynamicBufferManager m_recvBuffer; //接收数据的缓存
         protected IncomingDataParser m_incomingDataParser; //收到数据的解析器，用于解析返回的内容
-        protected DynamicBufferManager m_sendBuffer; //发送数据的缓存，统一写到内存中，调用一次发送
+        protected DynamicBufferManager sendBufferManager; //发送数据的缓存，统一写到内存中，调用一次发送
 
         public SyncSocketInvokeElement()
         {
@@ -31,7 +31,7 @@ namespace NETUploadClient.SyncSocketCore
             m_outgoingDataAssembler = new OutgoingDataAssembler();
             m_recvBuffer = new DynamicBufferManager(ProtocolConst.ReceiveBufferSize);
             m_incomingDataParser = new IncomingDataParser();
-            m_sendBuffer = new DynamicBufferManager(ProtocolConst.ReceiveBufferSize);
+            sendBufferManager = new DynamicBufferManager(ProtocolConst.ReceiveBufferSize);
         }
 
         public void Connect(string host, int port)
@@ -51,16 +51,19 @@ namespace NETUploadClient.SyncSocketCore
             //m_tcpClient.Client.
         }
 
+        /// <summary>
+        /// 发送命令（使用阻塞模式），把buffer里的内容转为UTF8发送
+        /// </summary>
         public void SendCommand()
         {
             string commandText = m_outgoingDataAssembler.GetProtocolText();
             byte[] bufferUTF8 = Encoding.UTF8.GetBytes(commandText);
             int totalLength = sizeof(int) + bufferUTF8.Length; //获取总大小
-            m_sendBuffer.Clear();
-            m_sendBuffer.WriteInt(totalLength, false); //写入总大小
-            m_sendBuffer.WriteInt(bufferUTF8.Length, false); //写入命令大小
-            m_sendBuffer.WriteBuffer(bufferUTF8); //写入命令内容
-            m_tcpClient.Client.Send(m_sendBuffer.Buffer, 0, m_sendBuffer.DataCount, SocketFlags.None); //使用阻塞模式，Socket会一次发送完所有数据后才返回
+            sendBufferManager.Clear();
+            sendBufferManager.WriteInt(totalLength, false); //写入总大小
+            sendBufferManager.WriteInt(bufferUTF8.Length, false); //写入命令大小
+            sendBufferManager.WriteBuffer(bufferUTF8); //写入命令内容
+            m_tcpClient.Client.Send(sendBufferManager.Buffer, 0, sendBufferManager.DataCount, SocketFlags.None); //使用阻塞模式，Socket会一次发送完所有数据后才返回
         }
 
         public void SendCommand(byte[] buffer, int offset, int count)
@@ -68,14 +71,18 @@ namespace NETUploadClient.SyncSocketCore
             string commandText = m_outgoingDataAssembler.GetProtocolText();
             byte[] bufferUTF8 = Encoding.UTF8.GetBytes(commandText);
             int totalLength = sizeof(int) + bufferUTF8.Length + count; //获取总大小
-            m_sendBuffer.Clear();
-            m_sendBuffer.WriteInt(totalLength, false); //写入总大小
-            m_sendBuffer.WriteInt(bufferUTF8.Length, false); //写入命令大小
-            m_sendBuffer.WriteBuffer(bufferUTF8); //写入命令内容
-            m_sendBuffer.WriteBuffer(buffer, offset, count); //写入二进制数据
-            m_tcpClient.Client.Send(m_sendBuffer.Buffer, 0, m_sendBuffer.DataCount, SocketFlags.None);
+            sendBufferManager.Clear();
+            sendBufferManager.WriteInt(totalLength, false); //写入总大小
+            sendBufferManager.WriteInt(bufferUTF8.Length, false); //写入命令大小
+            sendBufferManager.WriteBuffer(bufferUTF8); //写入命令内容
+            sendBufferManager.WriteBuffer(buffer, offset, count); //写入二进制数据
+            m_tcpClient.Client.Send(sendBufferManager.Buffer, 0, sendBufferManager.DataCount, SocketFlags.None);
         }
 
+        /// <summary>
+        /// 接收指令
+        /// </summary>
+        /// <returns></returns>
         public bool RecvCommand()
         {
             m_recvBuffer.Clear();
@@ -96,12 +103,12 @@ namespace NETUploadClient.SyncSocketCore
         public bool RecvCommand(out byte[] buffer, out int offset, out int size)
         {
             m_recvBuffer.Clear();
-            m_tcpClient.Client.Receive(m_recvBuffer.Buffer, sizeof(int), SocketFlags.None);
-            int packetLength = BitConverter.ToInt32(m_recvBuffer.Buffer, 0); //获取包长度
+            m_tcpClient.Client.Receive(m_recvBuffer.Buffer, sizeof(int), SocketFlags.None);//先接收32bit的数据
+            int packetLength = BitConverter.ToInt32(m_recvBuffer.Buffer, 0); //获取包剩余长度
             if (NetByteOrder)
                 packetLength = System.Net.IPAddress.NetworkToHostOrder(packetLength); //把网络字节顺序转为本地字节顺序
             m_recvBuffer.SetBufferSize(sizeof(int) + packetLength); //保证接收有足够的空间
-            m_tcpClient.Client.Receive(m_recvBuffer.Buffer, sizeof(int), packetLength, SocketFlags.None);
+            m_tcpClient.Client.Receive(m_recvBuffer.Buffer, sizeof(int), packetLength, SocketFlags.None);//再接收剩余的数据
             int commandLen = BitConverter.ToInt32(m_recvBuffer.Buffer, sizeof(int)); //取出命令长度
             string tmpStr = Encoding.UTF8.GetString(m_recvBuffer.Buffer, sizeof(int) + sizeof(int), commandLen);
             if (!m_incomingDataParser.DecodeProtocolText(tmpStr)) //解析命令

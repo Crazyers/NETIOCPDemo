@@ -14,24 +14,35 @@ namespace AsyncSocketServer
             m_socketFlag = "Throughput";
         }
 
+        
         public override void Close()
         {
             base.Close();
         }
 
-        public override bool ProcessCommand(byte[] buffer, int offset, int count) //处理分完包的数据，子类从这个方法继承
+        /// <summary>
+        /// 处理分完包的数据（去掉命令头以后的数据）
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public override bool ProcessCommand(byte[] buffer, int offset, int count)
         {
-            ThroughputSocketCommand command = StrToCommand(m_incomingDataParser.Command);
-            m_outgoingDataAssembler.Clear();
-            m_outgoingDataAssembler.AddResponse();
-            m_outgoingDataAssembler.AddCommand(m_incomingDataParser.Command);
-            if (command == ThroughputSocketCommand.CyclePacket)
-                return DoCyclePacket(buffer, offset, count);
-            else
-            {
-                Program.Logger.Error("Unknow command: " + m_incomingDataParser.Command);
-                return false;
-            }
+            string strData = Encoding.UTF8.GetString(buffer, offset, count);
+            Analysis.WaitingDealQueue.Enqueue(strData);//加入全局队列
+            return true;
+            //ThroughputSocketCommand command = StrToCommand(m_incomingDataParser.Command);
+            //m_outgoingDataAssembler.Clear();
+            //m_outgoingDataAssembler.AddResponse();
+            //m_outgoingDataAssembler.AddCommand(m_incomingDataParser.Command);
+            //if (command == ThroughputSocketCommand.CyclePacket)
+            //    return DoCyclePacket(buffer, offset, count);
+            //else
+            //{
+            //    Program.Logger.Error("Unknow command: " + m_incomingDataParser.Command);
+            //    return false;
+            //}
         }
 
         public ThroughputSocketCommand StrToCommand(string command)
@@ -42,6 +53,13 @@ namespace AsyncSocketServer
                 return ThroughputSocketCommand.None;
         }
 
+        /// <summary>
+        /// 处理接收到的消息
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public bool DoCyclePacket(byte[] buffer, int offset, int count)
         {
             int cycleCount = 0;

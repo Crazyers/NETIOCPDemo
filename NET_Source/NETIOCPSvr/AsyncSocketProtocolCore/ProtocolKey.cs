@@ -12,6 +12,9 @@ namespace AsyncSocketServer
         public static int SocketTimeOutMS = 60 * 1000; //Socket超时设置为60秒
     }
 
+    /// <summary>
+    /// 用户上线时判断类型
+    /// </summary>
     public enum ProtocolFlag
     {
         None = 0,

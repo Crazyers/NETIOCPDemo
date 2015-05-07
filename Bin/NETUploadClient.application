@@ -7,14 +7,14 @@
     <framework targetVersion="4.5" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="NETUploadClient.exe.manifest" size="4425">
+    <dependentAssembly dependencyType="install" codebase="NETUploadClient.exe.manifest" size="4426">
       <assemblyIdentity name="NETUploadClient.exe" version="1.0.0.0" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>4RvH+U525i4S0MQr64Ih3ljd5P9SS67Xsda2rCRa2h0=</dsig:DigestValue>
+        <dsig:DigestValue>eFmEsbDjumxmQlxKjoZgzd1+uztKKgRH8mW0a8+fMLE=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

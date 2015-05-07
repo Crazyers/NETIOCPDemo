@@ -109,6 +109,10 @@ namespace NETUploadClient.SyncSocketProtocolCore
             }
         }
 
+        /// <summary>
+        /// 调用基类的connect连接服务端
+        /// </summary>
+        /// <returns></returns>
         public bool ReConnectAndLogin()
         {
             if (m_tcpClient.Connected && (!DoActive()))

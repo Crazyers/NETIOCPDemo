@@ -107,8 +107,7 @@ namespace AsyncSocketServer
         /// <param name="acceptEventArgs"></param>
         private void ProcessAccept(SocketAsyncEventArgs acceptEventArgs)
         {
-            Program.Logger.InfoFormat("Client connection accepted. Local Address: {0}, Remote Address: {1}",
-                acceptEventArgs.AcceptSocket.LocalEndPoint, acceptEventArgs.AcceptSocket.RemoteEndPoint);
+            //Program.Logger.InfoFormat("Client connection accepted. Local Address: {0}, Remote Address: {1}", acceptEventArgs.AcceptSocket.LocalEndPoint, acceptEventArgs.AcceptSocket.RemoteEndPoint);
 
             //从连接池中分配一个连接赋给当前连接
             AsyncSocketUserToken userToken = m_asyncSocketUserTokenPool.Pop();
@@ -129,8 +128,8 @@ namespace AsyncSocketServer
             }
             catch (Exception E)
             {
-                Program.Logger.ErrorFormat("Accept client {0} error, message: {1}", userToken.ConnectSocket, E.Message);
-                Program.Logger.Error(E.StackTrace);                
+                Program.Logger.ErrorFormat("Accept client {0} error, message: {1}, trace:{2}", userToken.ConnectSocket, E.Message, E.StackTrace);
+                //Program.Logger.Error(E.StackTrace);                
             }            
 
             StartAccept(acceptEventArgs); //把当前异步事件释放，等待下次连接
@@ -162,8 +161,8 @@ namespace AsyncSocketServer
             }
             catch (Exception E)
             {
-                Program.Logger.ErrorFormat("IO_Completed {0} error, message: {1}", userToken.ConnectSocket, E.Message);
-                Program.Logger.Error(E.StackTrace);
+                Program.Logger.ErrorFormat("IO_Completed {0} error, message: {1}, trace:{2}", userToken.ConnectSocket, E.Message, E.StackTrace);
+                //Program.Logger.Error(E.StackTrace);
             }                     
         }
 
@@ -181,30 +180,32 @@ namespace AsyncSocketServer
             {
                 int offset = userToken.ReceiveEventArgs.Offset;
                 int count = userToken.ReceiveEventArgs.BytesTransferred;
-                if ((userToken.AsyncSocketInvokeElement == null) & (userToken.ConnectSocket != null)) //存在Socket对象，并且没有绑定协议对象，则进行协议对象绑定
+                //（确定是什么协议，用于绑定上线客户端，以后来的就都走这个socket）存在Socket对象，并且没有绑定协议对象，则进行协议对象绑定
+                if ((userToken.AsyncSocketInvokeElement == null) & (userToken.ConnectSocket != null)) 
                 {
+                    //查找是哪一个协议
                     BuildingSocketInvokeElement(userToken);
                     offset = offset + 1;
                     count = count - 1;
                 }
                 if (userToken.AsyncSocketInvokeElement == null) //如果没有解析对象，提示非法连接并关闭连接
                 {
-                    Program.Logger.WarnFormat("Illegal client connection. Local Address: {0}, Remote Address: {1}", userToken.ConnectSocket.LocalEndPoint, 
-                        userToken.ConnectSocket.RemoteEndPoint);
+                    Program.Logger.WarnFormat("Illegal client connection. Local Address: {0}, Remote Address: {1}", userToken.ConnectSocket.LocalEndPoint, userToken.ConnectSocket.RemoteEndPoint);
                     CloseClientSocket(userToken);
                 }
-                else
+                else//现在是收到消息内容了
                 {
                     if (count > 0) //处理接收数据
                     {
-                        if (!userToken.AsyncSocketInvokeElement.ProcessReceive(userToken.ReceiveEventArgs.Buffer, offset, count))
-                        { //如果处理数据返回失败，则断开连接
+                        bool blnProcessReceive = userToken.AsyncSocketInvokeElement.ProcessReceive(userToken.ReceiveEventArgs.Buffer, offset, count);
+                        if (!blnProcessReceive) //如果处理数据返回失败，则断开连接
+                        {
                             CloseClientSocket(userToken);
                         }
                         else //否则投递下次介绍数据请求
                         {
                             bool willRaiseEvent = userToken.ConnectSocket.ReceiveAsync(userToken.ReceiveEventArgs); //投递接收请求
-                            if (!willRaiseEvent)
+                            if (!willRaiseEvent)//如果 I/O 操作同步完成，将返回 false。
                                 ProcessReceive(userToken.ReceiveEventArgs);
                         }
                     }
@@ -222,6 +223,10 @@ namespace AsyncSocketServer
             }
         }
 
+        /// <summary>
+        /// 获取所要使用的协议
+        /// </summary>
+        /// <param name="userToken"></param>
         private void BuildingSocketInvokeElement(AsyncSocketUserToken userToken)
         {
             byte flag = userToken.ReceiveEventArgs.Buffer[userToken.ReceiveEventArgs.Offset];
@@ -239,8 +244,7 @@ namespace AsyncSocketServer
                 userToken.AsyncSocketInvokeElement = new LogOutputSocketProtocol(this, userToken);
             if (userToken.AsyncSocketInvokeElement != null)
             {
-                Program.Logger.InfoFormat("Building socket invoke element {0}.Local Address: {1}, Remote Address: {2}",
-                    userToken.AsyncSocketInvokeElement, userToken.ConnectSocket.LocalEndPoint, userToken.ConnectSocket.RemoteEndPoint);
+                //Program.Logger.InfoFormat("Building socket invoke element {0}.Local Address: {1}, Remote Address: {2}", userToken.AsyncSocketInvokeElement, userToken.ConnectSocket.LocalEndPoint, userToken.ConnectSocket.RemoteEndPoint);
             } 
         }
 
@@ -263,7 +267,7 @@ namespace AsyncSocketServer
         {
             if (connectSocket == null)
                 return false;
-            sendEventArgs.SetBuffer(buffer, offset, count);
+            sendEventArgs.SetBuffer(buffer, offset, count);//设置要用于异步套接字方法的数据缓冲区。
             bool willRaiseEvent = connectSocket.SendAsync(sendEventArgs);
             if (!willRaiseEvent)
             {
@@ -277,8 +281,7 @@ namespace AsyncSocketServer
         {
             if (userToken.ConnectSocket == null)
                 return;
-            string socketInfo = string.Format("Local Address: {0} Remote Address: {1}", userToken.ConnectSocket.LocalEndPoint,
-                userToken.ConnectSocket.RemoteEndPoint);
+            string socketInfo = string.Format("Local Address: {0} Remote Address: {1}", userToken.ConnectSocket.LocalEndPoint, userToken.ConnectSocket.RemoteEndPoint);
             Program.Logger.InfoFormat("Client connection disconnected. {0}", socketInfo);
             try
             {

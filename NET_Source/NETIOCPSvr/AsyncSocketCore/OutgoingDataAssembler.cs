@@ -5,6 +5,9 @@ using System.Text;
 
 namespace AsyncSocketServer
 {
+    /// <summary>
+    /// 协议组装器，用来组装往外发送的命令，主要用于组装协议格式
+    /// </summary>
     public class OutgoingDataAssembler
     {
         private List<string> m_protocolText;
@@ -19,14 +22,23 @@ namespace AsyncSocketServer
             m_protocolText.Clear();
         }
 
+        /// <summary>
+        /// 把List里的值转为用换行符分隔的字符串
+        /// </summary>
+        /// <returns></returns>
         public string GetProtocolText()
         {
             string tmpStr = "";
+            //[Request]
+            //Command=Login
+            //UserName=admin
+            //Password=21232f297a57a5a743894a0e4a801fc3
             if (m_protocolText.Count > 0)
             {
                 tmpStr = m_protocolText[0];
                 for (int i = 1; i < m_protocolText.Count; i++)
                 {
+                    //每一个命令都有一个头：即m_protocolText[0]
                     tmpStr = tmpStr + ProtocolKey.ReturnWrap + m_protocolText[i];
                 }
             }

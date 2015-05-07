@@ -50,7 +50,7 @@ namespace AsyncSocketServer
             ReceiveEventArgs = new SocketAsyncEventArgs();
             ReceiveEventArgs.UserToken = this;
             m_asyncReceiveBuffer = new byte[asyncReceiveBufferSize];
-            ReceiveEventArgs.SetBuffer(m_asyncReceiveBuffer, 0, m_asyncReceiveBuffer.Length);
+            ReceiveEventArgs.SetBuffer(m_asyncReceiveBuffer, 0, m_asyncReceiveBuffer.Length);//设置要用于异步套接字方法的数据缓冲区。
             SendEventArgs = new SocketAsyncEventArgs();
             SendEventArgs.UserToken = this;
             ReceiveBuffer = new DynamicBufferManager(ProtocolConst.InitBufferSize);

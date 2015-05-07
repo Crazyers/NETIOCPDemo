@@ -49,6 +49,13 @@ namespace NETUploadClient.SyncSocketProtocol
             }
         }
 
+        /// <summary>
+        /// 发送具体数据
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public bool DoData(byte[] buffer, int offset, int count)
         {
             try

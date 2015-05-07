@@ -41,7 +41,7 @@ namespace AsyncSocketServer
         }
 
         /// <summary>
-        /// 接收异步事件返回的数据，用于对数据进行缓存和分包
+        /// 接收异步事件返回的数据，用于对数据进行缓存和分包，这是原始数据的包
         /// </summary>
         /// <param name="buffer"></param>
         /// <param name="offset"></param>
@@ -61,15 +61,17 @@ namespace AsyncSocketServer
                 if (NetByteOrder)
                     packetLength = System.Net.IPAddress.NetworkToHostOrder(packetLength); //把网络字节顺序转为本地字节顺序
 
-
                 if ((packetLength > 10 * 1024 * 1024) | (receiveBuffer.DataCount > 10 * 1024 * 1024)) //最大Buffer异常保护
                     return false;
 
-                if ((receiveBuffer.DataCount - sizeof(int)) >= packetLength) //收到的数据达到包长度
+                //收到的数据达到包长度，进行处理，否则不处理，等待下一个包继续写入缓存
+                if ((receiveBuffer.DataCount - sizeof(int)) >= packetLength)
                 {
+                    Analysis.IntTotalMsg++;
+                    //处理包
                     result = ProcessPacket(receiveBuffer.Buffer, sizeof(int), packetLength);
-                    if (result)
-                        receiveBuffer.Clear(packetLength + sizeof(int)); //从缓存中清理
+                    if (result)//处理完成，从缓存中清理
+                        receiveBuffer.Clear(packetLength + sizeof(int));
                     else
                         return result;
                 }
@@ -95,10 +97,12 @@ namespace AsyncSocketServer
             int commandLen = BitConverter.ToInt32(buffer, offset); //取出命令长度
             //分包完成后，把内存数组是UTF-8编码转换为Unicode，即为C#的string，后续的处理就都可以基于string进行处理，比较方便
             string tmpStr = Encoding.UTF8.GetString(buffer, offset + sizeof(int), commandLen);
-            if (!m_incomingDataParser.DecodeProtocolText(tmpStr)) //解析命令
+            bool blnDecode = m_incomingDataParser.DecodeProtocolText(tmpStr);
+            if (!blnDecode) //解析命令
               return false;
 
-            return ProcessCommand(buffer, offset + sizeof(int) + commandLen, count - sizeof(int) - commandLen); //处理命令
+            //处理命令，针对不同的命令进行处理
+            return ProcessCommand(buffer, offset + sizeof(int) + commandLen, count - sizeof(int) - commandLen); 
         }
 
         /// <summary>
@@ -168,6 +172,13 @@ namespace AsyncSocketServer
             return result;
         }
 
+        /// <summary>
+        /// 发送结果
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public bool DoSendResult(byte[] buffer, int offset, int count)
         {
             string commandText = m_outgoingDataAssembler.GetProtocolText();

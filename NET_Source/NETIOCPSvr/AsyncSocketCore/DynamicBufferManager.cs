@@ -6,6 +6,7 @@ using System.Text;
 namespace AsyncSocketServer
 {
     /// <summary>
+    /// ====用于把命令和数据同时写入到缓存中，调用一次发送或者接收，可以提高性能====
     /// 动态缓存是随着数据量大小动态增长，申请的内存在运行过程中重复利用，不释放.
     /// 这样对内存只进行读写，不进行申请和释放，整体性能较高，因为内存申请释放比读写的效率低很多.
     /// 因为申请释放内存需要进行加锁，进行系统内核和用户切换，因此使用动态缓存可以降低内核和用户态切换，提高性能。
@@ -36,7 +37,11 @@ namespace AsyncSocketServer
             DataCount = 0;
         }
 
-        public void Clear(int count) //清理指定大小的数据
+        /// <summary>
+        /// 清理指定大小的数据
+        /// </summary>
+        /// <param name="count"></param>
+        public void Clear(int count) 
         {
             if (count >= DataCount) //如果需要清理的数据大于现有数据大小，则全部清理
             {

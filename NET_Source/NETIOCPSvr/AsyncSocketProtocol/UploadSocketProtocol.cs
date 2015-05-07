@@ -40,7 +40,14 @@ namespace AsyncSocketServer
             }
         }
 
-        public override bool ProcessCommand(byte[] buffer, int offset, int count) //处理分完包的数据，子类从这个方法继承
+        /// <summary>
+        /// 处理分完包的数据，子类从这个方法继承
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public override bool ProcessCommand(byte[] buffer, int offset, int count) 
         {
             UploadSocketCommand command = StrToCommand(m_incomingDataParser.Command);
             m_outgoingDataAssembler.Clear();

@@ -1,0 +1,14 @@
+C:\Users\yincu_000\Desktop\IOCPDemo_NET_V4\Bin\SocketAsyncSvr.exe.config
+C:\Users\yincu_000\Desktop\IOCPDemo_NET_V4\Bin\SocketAsyncSvr.exe
+C:\Users\yincu_000\Desktop\IOCPDemo_NET_V4\Bin\SocketAsyncSvr.pdb
+C:\Users\yincu_000\Desktop\IOCPDemo_NET_V4\NET_Source\NETIOCPSvr\obj\x86\Debug\SocketAsyncSvr.exe
+C:\Users\yincu_000\Desktop\IOCPDemo_NET_V4\NET_Source\NETIOCPSvr\obj\x86\Debug\SocketAsyncSvr.pdb
+C:\Users\yincu_000\Desktop\IOCPDemo_NET_V4\NET_Source\NETIOCPSvr\obj\x86\Debug\NETIOCPSvr.csprojResolveAssemblyReference.cache
+D:\GitHub\NETIOCPDemo\Bin\SocketAsyncSvr.exe.config
+D:\GitHub\NETIOCPDemo\NET_Source\NETIOCPSvr\obj\x86\Debug\SocketAsyncSvr.exe
+D:\GitHub\NETIOCPDemo\NET_Source\NETIOCPSvr\obj\x86\Debug\SocketAsyncSvr.pdb
+D:\GitHub\NETIOCPDemo\Bin\SocketAsyncSvr.exe
+D:\GitHub\NETIOCPDemo\Bin\SocketAsyncSvr.pdb
+D:\GitHub\NETIOCPDemo\NET_Source\NETIOCPSvr\obj\x86\Debug\NETIOCPSvr.csprojResolveAssemblyReference.cache
+D:\GitHub\NETIOCPDemo\LCTCPSocket\NETIOCPSvr\obj\x86\Debug\SocketAsyncSvr.exe
+D:\GitHub\NETIOCPDemo\LCTCPSocket\NETIOCPSvr\obj\x86\Debug\SocketAsyncSvr.pdb

@@ -1,0 +1,7 @@
+D:\GitHub\NETIOCPDemo\LCTCPSocket\ServerHost\bin\Debug\ServerHost.exe
+D:\GitHub\NETIOCPDemo\LCTCPSocket\ServerHost\bin\Debug\ServerHost.pdb
+D:\GitHub\NETIOCPDemo\LCTCPSocket\ServerHost\bin\Debug\WCFService.dll
+D:\GitHub\NETIOCPDemo\LCTCPSocket\ServerHost\bin\Debug\WCFService.pdb
+D:\GitHub\NETIOCPDemo\LCTCPSocket\ServerHost\obj\Debug\WCFServerHost.csprojResolveAssemblyReference.cache
+D:\GitHub\NETIOCPDemo\LCTCPSocket\ServerHost\obj\Debug\ServerHost.exe
+D:\GitHub\NETIOCPDemo\LCTCPSocket\ServerHost\obj\Debug\ServerHost.pdb

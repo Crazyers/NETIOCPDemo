@@ -29,6 +29,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -59,6 +60,8 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -79,6 +82,7 @@
     <Compile Include="DBHelper.cs" />
     <Compile Include="Framework.cs" />
     <Compile Include="Helper.cs" />
+    <Compile Include="IWcfService.cs" />
     <Compile Include="Model\Cjd.cs" />
     <Compile Include="Model\CjdHeat.cs" />
     <Compile Include="Program.cs" />
@@ -89,6 +93,7 @@
     <Compile Include="AsyncSocketCore\AsyncSocketServer.cs" />
     <Compile Include="AsyncSocketCore\AsyncSendBufferManager.cs" />
     <Compile Include="AsyncSocketProtocol\UploadSocketProtocol.cs" />
+    <Compile Include="WcfService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

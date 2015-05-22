@@ -1,0 +1,6 @@
+D:\GitHub\NETIOCPDemo\LCTCPSocket\WCFService\bin\Debug\WCFService.dll.config
+D:\GitHub\NETIOCPDemo\LCTCPSocket\WCFService\bin\Debug\WCFService.dll
+D:\GitHub\NETIOCPDemo\LCTCPSocket\WCFService\bin\Debug\WCFService.pdb
+D:\GitHub\NETIOCPDemo\LCTCPSocket\WCFService\obj\Debug\WCFLibrary.csprojResolveAssemblyReference.cache
+D:\GitHub\NETIOCPDemo\LCTCPSocket\WCFService\obj\Debug\WCFService.dll
+D:\GitHub\NETIOCPDemo\LCTCPSocket\WCFService\obj\Debug\WCFService.pdb

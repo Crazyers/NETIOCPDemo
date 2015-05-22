@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NETIOCPSvr", "NETIOCPSvr\NETIOCPSvr.csproj", "{119D500C-48AA-4C40-8189-0783653F8086}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NETUploadClient", "NETUploadClient\NETUploadClient.csproj", "{1EA7CDFC-C506-4598-8E32-C256437D7DA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WCFServerHost", "ServerHost\WCFServerHost.csproj", "{7D7DD154-99F3-49E3-8AF7-1DA4A3D475CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WCFLibrary", "WCFService\WCFLibrary.csproj", "{092AD85C-AC2C-4AD7-BFBA-4F696531879C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +41,26 @@ Global
 		{1EA7CDFC-C506-4598-8E32-C256437D7DA4}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{1EA7CDFC-C506-4598-8E32-C256437D7DA4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{1EA7CDFC-C506-4598-8E32-C256437D7DA4}.Release|x86.ActiveCfg = Release|Any CPU
+		{7D7DD154-99F3-49E3-8AF7-1DA4A3D475CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D7DD154-99F3-49E3-8AF7-1DA4A3D475CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D7DD154-99F3-49E3-8AF7-1DA4A3D475CD}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7D7DD154-99F3-49E3-8AF7-1DA4A3D475CD}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7D7DD154-99F3-49E3-8AF7-1DA4A3D475CD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7D7DD154-99F3-49E3-8AF7-1DA4A3D475CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D7DD154-99F3-49E3-8AF7-1DA4A3D475CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D7DD154-99F3-49E3-8AF7-1DA4A3D475CD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7D7DD154-99F3-49E3-8AF7-1DA4A3D475CD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7D7DD154-99F3-49E3-8AF7-1DA4A3D475CD}.Release|x86.ActiveCfg = Release|Any CPU
+		{092AD85C-AC2C-4AD7-BFBA-4F696531879C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{092AD85C-AC2C-4AD7-BFBA-4F696531879C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{092AD85C-AC2C-4AD7-BFBA-4F696531879C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{092AD85C-AC2C-4AD7-BFBA-4F696531879C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{092AD85C-AC2C-4AD7-BFBA-4F696531879C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{092AD85C-AC2C-4AD7-BFBA-4F696531879C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{092AD85C-AC2C-4AD7-BFBA-4F696531879C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{092AD85C-AC2C-4AD7-BFBA-4F696531879C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{092AD85C-AC2C-4AD7-BFBA-4F696531879C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{092AD85C-AC2C-4AD7-BFBA-4F696531879C}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

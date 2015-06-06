@@ -8,13 +8,16 @@ namespace AsyncSocketServer
 {
     public class AsyncSocketUserToken
     {
+        #region 属性
         public SocketAsyncEventArgs ReceiveEventArgs { get; set; }
-        protected byte[] m_asyncReceiveBuffer;
         public SocketAsyncEventArgs SendEventArgs { get; set; }
         public DynamicBufferManager ReceiveBuffer { get; set; }//用于多包融合的情况，比如采集器采集需要10包合到一起再进行处理
         public AsyncSendBufferManager SendBuffer { get; set; }
         public AsyncSocketInvokeElement AsyncSocketInvokeElement { get; set; }
+        public DateTime ConnectDateTime { get; set; }
+        public DateTime ActiveDateTime { get; set; }
 
+        protected byte[] m_asyncReceiveBuffer;
         protected Socket m_connectSocket;
         public Socket ConnectSocket
         {
@@ -37,12 +40,12 @@ namespace AsyncSocketServer
                 SendEventArgs.AcceptSocket = m_connectSocket;
             }
         }
+        #endregion 属性
 
-        protected DateTime m_ConnectDateTime;
-        public DateTime ConnectDateTime { get { return m_ConnectDateTime; } set { m_ConnectDateTime = value; } }
-        protected DateTime m_ActiveDateTime;
-        public DateTime ActiveDateTime { get { return m_ActiveDateTime; } set { m_ActiveDateTime = value; } }
-
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="asyncReceiveBufferSize"></param>
         public AsyncSocketUserToken(int asyncReceiveBufferSize)
         {
             m_connectSocket = null;

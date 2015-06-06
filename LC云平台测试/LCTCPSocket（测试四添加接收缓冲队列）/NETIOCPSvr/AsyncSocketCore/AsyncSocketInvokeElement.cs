@@ -11,13 +11,14 @@ namespace AsyncSocketServer
     public class AsyncSocketInvokeElement
     {
         protected AsyncSocketServer m_asyncSocketServer;
-        public AsyncSocketUserToken AsyncSocketUserToken { get; protected set; }
-        public bool NetByteOrder { get; set; }//长度是否使用网络字节顺序
         protected bool m_sendAsync; //标识是否有发送异步事件
-        public DateTime ConnectDT { get; protected set; }
-        public DateTime ActiveDT { get; protected set; }
         protected IncomingDataParser m_incomingDataParser; //协议解析器，用来解析客户端接收到的命令
         protected OutgoingDataAssembler m_outgoingDataAssembler; //协议组装器，用来组织服务端返回的命令
+
+        public AsyncSocketUserToken AsyncSocketUserToken { get; protected set; }
+        public bool NetByteOrder { get; set; }//长度是否使用网络字节顺序
+        public DateTime ConnectDT { get; protected set; }
+        public DateTime ActiveDT { get; protected set; }
 
         public AsyncSocketInvokeElement(AsyncSocketServer asyncSocketServer, AsyncSocketUserToken asyncSocketUserToken)
         {
@@ -98,7 +99,7 @@ namespace AsyncSocketServer
         }
 
         /// <summary>
-        /// 发包我们主要调用DoSendResult，从发送缓冲中获取协议文本后，转换为UTF-8，然后写入发送列表中
+        /// 发包调用DoSendResult，从发送缓冲中获取协议文本后，转换为UTF-8，然后写入发送列表中
         /// </summary>
         /// <returns></returns>
         public bool DoSendResult()

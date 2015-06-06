@@ -29,17 +29,17 @@ namespace AsyncSocketServer
             {
                 AsyncSocketUserToken[] userTokenArray = null;
                 m_asyncSocketServer.AsyncSocketUserTokenList.CopyList(ref userTokenArray);
-                for (int i = 0; i < userTokenArray.Length; i++)
+                foreach (AsyncSocketUserToken token in userTokenArray)
                 {
                     if (!m_thread.IsAlive)
                         break;
                     try
                     {
-                        if ((DateTime.Now - userTokenArray[i].ActiveDateTime).Milliseconds > m_asyncSocketServer.SocketTimeOutMS) //超时Socket断开
+                        if ((DateTime.Now - token.ActiveDateTime).Milliseconds > m_asyncSocketServer.SocketTimeOutMS) //超时Socket断开
                         {
-                            lock (userTokenArray[i])
+                            lock (token)
                             {
-                                m_asyncSocketServer.CloseClientSocket(userTokenArray[i]);
+                                m_asyncSocketServer.CloseClientSocket(token);
                             }
                         }
                     }                    

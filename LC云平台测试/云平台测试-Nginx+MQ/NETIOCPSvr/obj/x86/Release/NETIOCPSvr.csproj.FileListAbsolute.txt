@@ -1,0 +1,5 @@
+D:\GitHub\Bin\SocketAsyncSvr.exe.config
+D:\GitHub\Bin\SocketAsyncSvr.exe
+D:\GitHub\Bin\SocketAsyncSvr.pdb
+D:\GitHub\NETIOCPDemo\NET_Source\NETIOCPSvr\obj\x86\Release\SocketAsyncSvr.exe
+D:\GitHub\NETIOCPDemo\NET_Source\NETIOCPSvr\obj\x86\Release\SocketAsyncSvr.pdb

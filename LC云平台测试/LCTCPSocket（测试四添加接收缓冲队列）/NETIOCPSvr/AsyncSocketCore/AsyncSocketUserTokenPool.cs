@@ -13,6 +13,10 @@ namespace AsyncSocketServer
     {
         private Stack<AsyncSocketUserToken> m_pool;
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="capacity"></param>
         public AsyncSocketUserTokenPool(int capacity)
         {
             m_pool = new Stack<AsyncSocketUserToken>(capacity);
@@ -45,7 +49,7 @@ namespace AsyncSocketServer
     }
 
     /// <summary>
-    /// AsyncSocketUserToken的链表
+    /// 已经连接的Socket的列表
     /// </summary>
     public class AsyncSocketUserTokenList : Object
     {

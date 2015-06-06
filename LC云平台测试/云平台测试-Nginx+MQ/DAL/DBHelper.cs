@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Data.SqlClient;
 
-namespace AsyncSocketServer
+namespace DAL
 {
     public class DBHelper
     {
@@ -32,6 +32,27 @@ namespace AsyncSocketServer
                 }
                 return conn;
             }
+        }
+
+        /// <summary>
+        /// 使用SqlBulkCopy存入数据库
+        /// </summary>
+        public static void BulkSave2DB(DataTable dtEndTable)
+        {
+            SqlBulkCopy sqlbulk = new SqlBulkCopy(NewConn.ConnectionString, SqlBulkCopyOptions.TableLock);
+            sqlbulk.BulkCopyTimeout = 240;
+            sqlbulk.DestinationTableName = "measure_heat";
+            sqlbulk.BatchSize = 10000;
+
+            SqlConnection myconnection = new SqlConnection(NewConn.ConnectionString);
+            myconnection.Open();
+            if (!(dtEndTable == null) && dtEndTable.Rows.Count > 0)
+            {
+                sqlbulk.WriteToServer(dtEndTable, DataRowState.Added);
+            }
+            sqlbulk.Close();
+            myconnection.Close();
+            dtEndTable.Clear(); //清空数据
         }
 
         //执行增删改(无参)

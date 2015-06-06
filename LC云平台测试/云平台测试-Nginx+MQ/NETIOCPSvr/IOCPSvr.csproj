@@ -67,28 +67,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncSocketCore\AsyncSocketUserToken.cs" />
-    <Compile Include="AsyncSocketCore\AsyncSocketUserTokenPool.cs" />
-    <Compile Include="AsyncSocketCore\AsyncSocketInvokeElement.cs" />
+    <Compile Include="UserToken\AsyncSocketUserToken.cs" />
+    <Compile Include="UserToken\AsyncSocketUserTokenList.cs" />
+    <Compile Include="UserToken\AsyncSocketUserTokenPool.cs" />
     <Compile Include="AsyncSocketCore\DynamicBufferManager.cs" />
-    <Compile Include="AsyncSocketProtocol\HeatLiChuangProtocol.cs" />
-    <Compile Include="AsyncSocketProtocolCore\BaseSocketProtocol.cs" />
-    <Compile Include="AsyncSocketProtocol\LogSocketProtocol.cs" />
-    <Compile Include="AsyncSocketPublic\BasicFunc.cs" />
     <Compile Include="AsyncSocketCore\DaemonThread.cs" />
-    <Compile Include="DBHelper.cs" />
-    <Compile Include="Framework.cs" />
-    <Compile Include="Helper.cs" />
-    <Compile Include="Model\Cjd.cs" />
-    <Compile Include="Model\CjdHeat.cs" />
+    <Compile Include="ProtocolConst.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AsyncSocketCore\OutgoingDataAssembler.cs" />
-    <Compile Include="AsyncSocketCore\IncomingDataParser.cs" />
-    <Compile Include="AsyncSocketProtocolCore\ProtocolKey.cs" />
     <Compile Include="AsyncSocketCore\AsyncSocketServer.cs" />
     <Compile Include="AsyncSocketCore\AsyncSendBufferManager.cs" />
-    <Compile Include="AsyncSocketProtocol\UploadSocketProtocol.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

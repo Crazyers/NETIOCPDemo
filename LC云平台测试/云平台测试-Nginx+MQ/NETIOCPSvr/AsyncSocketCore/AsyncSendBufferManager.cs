@@ -17,14 +17,13 @@ namespace AsyncSocketServer
     /// </summary>
     public class AsyncSendBufferManager
     {
-        private DynamicBufferManager m_dynamicBufferManager;
-        public DynamicBufferManager DynamicBufferManager { get { return m_dynamicBufferManager; } }
-        private List<SendBufferPacket> m_sendBufferList;
         private SendBufferPacket m_sendBufferPacket;
+        private List<SendBufferPacket> m_sendBufferList;
+        public DynamicBufferManager DynamicBufferManager { get; private set; }
 
         public AsyncSendBufferManager(int bufferSize)
         {
-            m_dynamicBufferManager = new DynamicBufferManager(bufferSize);
+            DynamicBufferManager = new DynamicBufferManager(bufferSize);
             m_sendBufferList = new List<SendBufferPacket>();
             m_sendBufferPacket.Offset = 0;
             m_sendBufferPacket.Count = 0;
@@ -32,13 +31,13 @@ namespace AsyncSocketServer
 
         public void StartPacket()
         {
-            m_sendBufferPacket.Offset = m_dynamicBufferManager.DataCount;
+            m_sendBufferPacket.Offset = DynamicBufferManager.DataCount;
             m_sendBufferPacket.Count = 0;
         }
 
         public void EndPacket()
         {
-            m_sendBufferPacket.Count = m_dynamicBufferManager.DataCount - m_sendBufferPacket.Offset;
+            m_sendBufferPacket.Count = DynamicBufferManager.DataCount - m_sendBufferPacket.Offset;
             m_sendBufferList.Add(m_sendBufferPacket);
         }
 
@@ -56,7 +55,7 @@ namespace AsyncSocketServer
             if (m_sendBufferList.Count <= 0)
                 return false;
             int count = m_sendBufferList[0].Count;
-            m_dynamicBufferManager.Clear(count);
+            DynamicBufferManager.Clear(count);
             m_sendBufferList.RemoveAt(0);
             return true;
         }
@@ -64,7 +63,7 @@ namespace AsyncSocketServer
         public void ClearPacket()
         {
             m_sendBufferList.Clear();
-            m_dynamicBufferManager.Clear(m_dynamicBufferManager.DataCount);
+            DynamicBufferManager.Clear(DynamicBufferManager.DataCount);
         }
     }
 }

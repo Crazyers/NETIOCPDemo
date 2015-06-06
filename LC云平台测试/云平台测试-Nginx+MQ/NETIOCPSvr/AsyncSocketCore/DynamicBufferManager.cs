@@ -16,18 +16,27 @@ namespace AsyncSocketServer
         public byte[] Buffer { get; set; } //存放内存的数组
         public int DataCount { get; set; } //写入数据大小
 
+        //构造函数
         public DynamicBufferManager(int bufferSize)
         {
             DataCount = 0;
             Buffer = new byte[bufferSize];
         }
 
-        public int GetDataCount() //获得当前写入的字节数
+        /// <summary>
+        /// 获得当前写入的字节数
+        /// </summary>
+        /// <returns></returns>
+        public int GetDataCount() 
         {
             return DataCount;
         }
 
-        public int GetReserveCount() //获得剩余的字节数
+        /// <summary>
+        /// 获得剩余的字节数
+        /// </summary>
+        /// <returns></returns>
+        public int GetReserveCount() 
         {
             return Buffer.Length - DataCount;
         }
@@ -57,7 +66,11 @@ namespace AsyncSocketServer
             }
         }
 
-        public void SetBufferSize(int size) //设置缓存大小
+        /// <summary>
+        /// 设置缓存大小
+        /// </summary>
+        /// <param name="size"></param>
+        public void SetBufferSize(int size) 
         {
             if (Buffer.Length < size)
             {
@@ -67,6 +80,12 @@ namespace AsyncSocketServer
             }
         }
 
+        /// <summary>
+        /// 写入Buffer
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
         public void WriteBuffer(byte[] buffer, int offset, int count)
         {
             if (GetReserveCount() >= count) //缓冲区空间够，不需要申请
@@ -85,6 +104,10 @@ namespace AsyncSocketServer
             }
         }
 
+        /// <summary>
+        /// 从0位置写入Buffer
+        /// </summary>
+        /// <param name="buffer"></param>
         public void WriteBuffer(byte[] buffer)
         {
             WriteBuffer(buffer, 0, buffer.Length);
@@ -94,7 +117,8 @@ namespace AsyncSocketServer
         {
             if (convert)
             {
-                value = System.Net.IPAddress.HostToNetworkOrder(value); //NET是小头结构，网络字节是大头结构，需要客户端和服务器约定好
+                //NET是小头结构，网络字节是大头结构，需要客户端和服务器约定好
+                value = System.Net.IPAddress.HostToNetworkOrder(value);
             }
             byte[] tmpBuffer = BitConverter.GetBytes(value);
             WriteBuffer(tmpBuffer);
@@ -104,7 +128,8 @@ namespace AsyncSocketServer
         {
             if (convert)
             {
-                value = System.Net.IPAddress.HostToNetworkOrder(value); //NET是小头结构，网络字节是大头结构，需要客户端和服务器约定好
+                //NET是小头结构，网络字节是大头结构，需要客户端和服务器约定好
+                value = System.Net.IPAddress.HostToNetworkOrder(value); 
             }            
             byte[] tmpBuffer = BitConverter.GetBytes(value);
             WriteBuffer(tmpBuffer);
@@ -114,13 +139,15 @@ namespace AsyncSocketServer
         {
             if (convert)
             {
-                value = System.Net.IPAddress.HostToNetworkOrder(value); //NET是小头结构，网络字节是大头结构，需要客户端和服务器约定好
+                //NET是小头结构，网络字节是大头结构，需要客户端和服务器约定好
+                value = System.Net.IPAddress.HostToNetworkOrder(value); 
             }
             byte[] tmpBuffer = BitConverter.GetBytes(value);
             WriteBuffer(tmpBuffer);
         }
 
-        public void WriteString(string value) //文本全部转成UTF8，UTF8兼容性好
+        //文本全部转成UTF8，UTF8兼容性好
+        public void WriteString(string value) 
         {
             byte[] tmpBuffer = Encoding.UTF8.GetBytes(value);
             WriteBuffer(tmpBuffer);

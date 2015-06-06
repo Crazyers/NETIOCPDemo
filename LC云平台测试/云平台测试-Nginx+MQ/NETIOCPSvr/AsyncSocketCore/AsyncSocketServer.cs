@@ -3,6 +3,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using AsyncSocketServer.AsyncSocketCore;
 
 namespace AsyncSocketServer
 {
@@ -20,8 +21,6 @@ namespace AsyncSocketServer
 
         public int SocketTimeOutMS { get; set; }
         public AsyncSocketUserTokenList AsyncSocketUserTokenList { get; private set; }
-        public LogOutputSocketProtocolMgr LogOutputSocketProtocolMgr { get; private set; }
-        public UploadSocketProtocolMgr UploadSocketProtocolMgr { get; private set; }
 
         /// <summary>
         /// 启动服务
@@ -35,9 +34,6 @@ namespace AsyncSocketServer
             m_asyncSocketUserTokenPool = new AsyncSocketUserTokenPool(numConnections);
             AsyncSocketUserTokenList = new AsyncSocketUserTokenList();
             m_maxNumberAcceptedClients = new Semaphore(numConnections, numConnections);
-
-            LogOutputSocketProtocolMgr = new LogOutputSocketProtocolMgr();
-            UploadSocketProtocolMgr = new UploadSocketProtocolMgr();
         }
 
         /// <summary>
@@ -193,42 +189,27 @@ namespace AsyncSocketServer
             if (userToken.ReceiveEventArgs.BytesTransferred > 0 && userToken.ReceiveEventArgs.SocketError == SocketError.Success)
             {
                 int count = userToken.ReceiveEventArgs.BytesTransferred;
-                //（确定是什么协议，用于绑定上线客户端，以后来的就都走这个socket）
-                // 第一次来连接，存在Socket对象，并且没有绑定协议对象，则进行协议对象绑定
-                if ((userToken.AsyncSocketInvokeElement == null) & (userToken.ConnectSocket != null))
+                //如果消息内容>0
+                if (count > 0)
                 {
-                    BuildingSocketInvokeElement(userToken);
-                    count = count - 1;
-                }
-                if (userToken.AsyncSocketInvokeElement == null) //如果没有解析对象，提示非法连接并关闭连接
-                {
-                    Program.Logger.WarnFormat("Illegal client connection. Local Address: {0}, Remote Address: {1}", userToken.ConnectSocket.LocalEndPoint, userToken.ConnectSocket.RemoteEndPoint);
-                    CloseClientSocket(userToken);
-                }
-                else//现在是收到消息内容了
-                {
-                    //如果消息内容>0
-                    if (count > 0)
+                    //处理接收数据（写入消息队列）
+                    bool blnProcessReceive = true; // userToken.AsyncSocketInvokeElement.ProcessReceive(userToken.ReceiveEventArgs.Buffer);
+                    if (!blnProcessReceive) //如果处理数据返回失败，则断开连接
                     {
-                        //处理接收数据
-                        bool blnProcessReceive = userToken.AsyncSocketInvokeElement.ProcessReceive(userToken.ReceiveEventArgs.Buffer);
-                        if (!blnProcessReceive) //如果处理数据返回失败，则断开连接
-                        {
-                            CloseClientSocket(userToken);
-                        }
-                        else //否则投递下次介绍数据请求
-                        {
-                            bool willRaiseEvent = userToken.ConnectSocket.ReceiveAsync(userToken.ReceiveEventArgs);
-                            if (!willRaiseEvent)//如果 I/O 操作同步完成，将返回 false。
-                                ProcessReceive(userToken.ReceiveEventArgs);
-                        }
+                        CloseClientSocket(userToken);
                     }
-                    else
+                    else //否则投递下次介绍数据请求
                     {
                         bool willRaiseEvent = userToken.ConnectSocket.ReceiveAsync(userToken.ReceiveEventArgs);
-                        if (!willRaiseEvent)
+                        if (!willRaiseEvent) //如果 I/O 操作同步完成，将返回 false。
                             ProcessReceive(userToken.ReceiveEventArgs);
                     }
+                }
+                else
+                {
+                    bool willRaiseEvent = userToken.ConnectSocket.ReceiveAsync(userToken.ReceiveEventArgs);
+                    if (!willRaiseEvent)
+                        ProcessReceive(userToken.ReceiveEventArgs);
                 }
             }
             else
@@ -238,39 +219,32 @@ namespace AsyncSocketServer
         }
 
         /// <summary>
-        /// 获取所要使用的协议
-        /// </summary>
-        /// <param name="userToken"></param>
-        private void BuildingSocketInvokeElement(AsyncSocketUserToken userToken)
-        {
-            byte flag = userToken.ReceiveEventArgs.Buffer[userToken.ReceiveEventArgs.Offset];
-            if (flag == (byte)ProtocolFlag.Upload)
-                userToken.AsyncSocketInvokeElement = new UploadSocketProtocol(this, userToken);
-            else
-            {
-                userToken.AsyncSocketInvokeElement = new HeatLiChuangProtocol(this, userToken);
-            }
-            if (userToken.AsyncSocketInvokeElement != null)
-            {
-                //Program.Logger.InfoFormat("Building socket invoke element {0}.Local Address: {1}, Remote Address: {2}", userToken.AsyncSocketInvokeElement, userToken.ConnectSocket.LocalEndPoint, userToken.ConnectSocket.RemoteEndPoint);
-            }
-        }
-
-        /// <summary>
-        /// 发送消息
+        /// 发送消息（得先从队列里把要发送的数据拿出来）
         /// This method is invoked when an asynchronous send operation completes.  
         /// The method issues another receive on the socket to read any additional data sent from the client
         /// </summary>
-        /// <param name="sendEventArgs"></param>
+        /// <param name="e"></param>
         /// <returns></returns>
-        private bool ProcessSend(SocketAsyncEventArgs sendEventArgs)
+        private bool ProcessSend(SocketAsyncEventArgs e)
         {
-            AsyncSocketUserToken userToken = sendEventArgs.UserToken as AsyncSocketUserToken;
-            if (userToken.AsyncSocketInvokeElement == null)
-                return false;
+            AsyncSocketUserToken userToken = e.UserToken as AsyncSocketUserToken;
             userToken.ActiveDateTime = DateTime.Now;
-            if (sendEventArgs.SocketError == SocketError.Success)
-                return userToken.AsyncSocketInvokeElement.SendCompleted(); //调用子类回调函数
+            if (e.SocketError == SocketError.Success)
+            {
+                AsyncSendBufferManager bufferManager = userToken.SendBuffer;
+                bufferManager.ClearFirstPacket(); //清除已发送的包
+                int offset = 0;
+                int count = 0;
+                if (bufferManager.GetFirstPacket(ref offset, ref count))
+                {
+                    return SendAsyncEvent(userToken.ConnectSocket, userToken.SendEventArgs, bufferManager.DynamicBufferManager.Buffer, offset, count);
+                }
+                else
+                {
+                    return true;
+                }
+                //return SendCallback();
+            }
             else
             {
                 CloseClientSocket(userToken);

@@ -41,8 +41,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analysis.cs" />
+    <Compile Include="AsyncSocketInvokeElement.cs" />
+    <Compile Include="AsyncSocketProtocolCore\BaseSocketProtocol.cs" />
+    <Compile Include="AsyncSocketProtocolCore\ProtocolKey.cs" />
+    <Compile Include="AsyncSocketProtocol\HeatLiChuangProtocol.cs" />
+    <Compile Include="IncomingDataParser.cs" />
+    <Compile Include="OutgoingDataAssembler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BLL\BLL.csproj">
+      <Project>{ad940901-dea5-4635-b3b7-6ba4e166d6ae}</Project>
+      <Name>BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Entity\Entity.csproj">
+      <Project>{2bb6667b-d51a-4a04-a694-eeaf8c64eda6}</Project>
+      <Name>Entity</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

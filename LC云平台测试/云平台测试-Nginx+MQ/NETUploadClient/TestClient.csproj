@@ -70,27 +70,14 @@
     <Compile Include="..\NETIOCPSvr\AsyncSocketCore\DynamicBufferManager.cs">
       <Link>SyncSocketCore\DynamicBufferManager.cs</Link>
     </Compile>
-    <Compile Include="..\NETIOCPSvr\AsyncSocketCore\IncomingDataParser.cs">
-      <Link>SyncSocketCore\IncomingDataParser.cs</Link>
-    </Compile>
-    <Compile Include="..\NETIOCPSvr\AsyncSocketCore\OutgoingDataAssembler.cs">
-      <Link>SyncSocketCore\OutgoingDataAssembler.cs</Link>
-    </Compile>
-    <Compile Include="..\NETIOCPSvr\AsyncSocketProtocolCore\ProtocolKey.cs">
-      <Link>SyncSocketProtocolCore\ProtocolKey.cs</Link>
-    </Compile>
-    <Compile Include="..\NETIOCPSvr\AsyncSocketPublic\BasicFunc.cs">
-      <Link>BasicFunc.cs</Link>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="SyncSocketCore\SyncSocketInvokeElement.cs" />
+    <Compile Include="SyncSocketProtocol\ClientBaseSocket.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SyncSocketProtocolCore\ClientBaseSocket.cs" />
     <Compile Include="SyncSocketProtocol\ClientHeatLiChuangProtocol.cs" />
     <Compile Include="TestHeatLiChuang.cs" />
   </ItemGroup>

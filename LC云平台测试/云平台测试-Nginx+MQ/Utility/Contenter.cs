@@ -20,6 +20,7 @@ namespace Utility
             }
             return result;
         }
+
         private string HexStringToString(string hs, Encoding encode)
         {
             //以%分割字符串，并去掉空字符
@@ -33,6 +34,7 @@ namespace Utility
             //按照指定编码将字节数组变为字符串
             return encode.GetString(b);
         }
+
         /// <summary>
         /// 字符串转16进制字节数组
         /// </summary>
@@ -48,6 +50,7 @@ namespace Utility
                 returnBytes[i] = Convert.ToByte(hexString.Substring(i*2, 2), 16);
             return returnBytes;
         }
+
         /// <summary>
         /// 字节数组转16进制字符串
         /// </summary>
@@ -133,5 +136,5 @@ namespace Utility
             return chs.GetString(bytes);
         }
     }
-    }
 }
+

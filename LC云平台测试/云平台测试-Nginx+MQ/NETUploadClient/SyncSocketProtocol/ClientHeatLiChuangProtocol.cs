@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NETUploadClient.SyncSocketProtocolCore;
+using NETUploadClient.SyncSocketCore;
 
 namespace NETUploadClient.SyncSocketProtocol
 {
     public class ClientHeatLiChuangProtocol: ClientBaseSocket
     {
-        public ClientHeatLiChuangProtocol()
-            : base()
+        public ClientHeatLiChuangProtocol(): base()
         {
-            m_protocolFlag = AsyncSocketServer.ProtocolFlag.Throughput;
         }
 
         /// <summary>
@@ -31,8 +29,6 @@ namespace NETUploadClient.SyncSocketProtocol
             }
             catch (Exception E)
             {
-                //记录日志
-                m_errorString = E.Message;
                 return false;
             }
         }

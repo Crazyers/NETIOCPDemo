@@ -45,58 +45,19 @@ namespace AsyncSocketServer
             int parallelNum = 0;
             if (!(int.TryParse(config.AppSettings.Settings["ParallelNum"].Value, out parallelNum)))
                 parallelNum = 8000;
-            int socketTimeOutMS = 0;
-            if (!(int.TryParse(config.AppSettings.Settings["SocketTimeOutMS"].Value, out socketTimeOutMS)))
-                socketTimeOutMS = 5*60*1000;
+            int socketTimeOutMs = 0;
+            if (!(int.TryParse(config.AppSettings.Settings["SocketTimeOutMS"].Value, out socketTimeOutMs)))
+                socketTimeOutMs = 5*60*1000;
             string strLissenIP = config.AppSettings.Settings["LissenIP"].Value;
 
-            Framework.Start();
-
             AsyncSocketSvr = new AsyncSocketServer(parallelNum);
-            AsyncSocketSvr.SocketTimeOutMS = socketTimeOutMS;
+            AsyncSocketSvr.SocketTimeOutMS = socketTimeOutMs;
             AsyncSocketSvr.Init();
             IPEndPoint listenPoint = new IPEndPoint(IPAddress.Parse(strLissenIP), port);
-        
             AsyncSocketSvr.Start(listenPoint);
-            //运行一个线程，监控全局队列的数目
-            Analysis.Analisis();
             Console.WriteLine("Press any key to terminate the server process....");
             Console.ReadKey();
         }
     }
-
-    public class Analysis
-    {
-        public static double IntTotalMsg = 0; //启动后共接收消息数目
-        public static int SaveCounts = 0; //存储次数
-        public static double DblSaveTotalTime = 0; //累计存储时间
-        public static double DblCurSaveTime = 0; //当前存储时间
-
-        /// <summary>
-        /// 分析数据，队列的大小，socket的个数等
-        /// </summary>
-        public static void Analisis()
-        {
-            Task task = new Task(() =>
-            {
-                double IntOldTotalMsg = 0; //上一秒的消息综述
-                while (true)
-                {
-                    double intTmp = IntTotalMsg - IntOldTotalMsg;
-                    Program.Logger.ErrorFormat("Socket: {0},接收/s:{1}, 缓冲:{2},待处理:{3},Save:{4}ms,平均Save:{5}ms,save:{6}次",
-                        Program.AsyncSocketSvr.AsyncSocketUserTokenList.Count(),
-                        intTmp,
-                        Framework.QueueRawData.Count,
-                        Framework.QueueWaitingCjdHeats.Count,
-                        DblCurSaveTime.ToString("F2"),
-                        (DblSaveTotalTime/SaveCounts).ToString("F2"),
-                        SaveCounts);
-                    IntOldTotalMsg = IntTotalMsg;
-                    Thread.Sleep(1000);
-                    //break;
-                }
-            });
-            task.Start();
-        }
-    }
+ 
 }

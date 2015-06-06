@@ -72,7 +72,7 @@
     <Compile Include="UserToken\AsyncSocketUserTokenPool.cs" />
     <Compile Include="AsyncSocketCore\DynamicBufferManager.cs" />
     <Compile Include="AsyncSocketCore\DaemonThread.cs" />
-    <Compile Include="ProtocolConst.cs" />
+    <Compile Include="AsyncSocketCore\ProtocolConst.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AsyncSocketCore\AsyncSocketServer.cs" />

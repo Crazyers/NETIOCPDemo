@@ -56,7 +56,6 @@ namespace AsyncSocketServer
             listenSocket.Bind(localEndPoint);
             listenSocket.Listen(m_numConnections);//m_numConnections--挂起连接队列的最大长度(能接收多少个连接，如果超出则拒绝)
             Program.Logger.InfoFormat("Start listen socket {0} success", localEndPoint.ToString());
-            //for (int i = 0; i < 64; i++) //不能循环投递多次AcceptAsync，会造成只接收8000连接后不接收连接了
             StartAccept(null);
             m_daemonThread = new DaemonThread(this);
         }
@@ -64,17 +63,17 @@ namespace AsyncSocketServer
         /// <summary>
         /// 开始接收链接
         /// </summary>
-        /// <param name="acceptEventArgs">接收的Socket上下文对象</param>
-        public void StartAccept(SocketAsyncEventArgs acceptEventArgs)
+        /// <param name="e">接收的Socket上下文对象</param>
+        public void StartAccept(SocketAsyncEventArgs e)
         {
-            if (acceptEventArgs == null)
+            if (e == null)
             {
-                acceptEventArgs = new SocketAsyncEventArgs();
-                acceptEventArgs.Completed += AcceptEventArg_Completed;
+                e = new SocketAsyncEventArgs();
+                e.Completed += AcceptEventArg_Completed;
             }
             else
             {
-                acceptEventArgs.AcceptSocket = null; //释放上次绑定的Socket，等待下一个Socket连接
+                e.AcceptSocket = null; //释放上次绑定的Socket，等待下一个Socket连接
             }
 
             m_maxNumberAcceptedClients.WaitOne(); //获取信号量,阻止当前线程，直到当前 System.Threading.WaitHandle 收到信号。
@@ -82,10 +81,10 @@ namespace AsyncSocketServer
             //如果 I/O 操作挂起，将返回 true。操作完成时，将引发 e 参数的 System.Net.Sockets.SocketAsyncEventArgs.Completed事件。
             //如果 I/O 操作同步完成，将返回 false。将不会引发 e 参数的 System.Net.Sockets.SocketAsyncEventArgs.Completed事件，
             //并且可能在方法调用返回后立即检查作为参数传递的 e 对象以检索操作的结果。
-            bool willRaiseEvent = listenSocket.AcceptAsync(acceptEventArgs);
+            bool willRaiseEvent = listenSocket.AcceptAsync(e);
             if (!willRaiseEvent)
             {
-                ProcessAccept(acceptEventArgs);
+                ProcessAccept(e);
             }
         }
 
@@ -93,16 +92,16 @@ namespace AsyncSocketServer
         /// 接受连接响应事件
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="acceptEventArgs"></param>
-        void AcceptEventArg_Completed(object sender, SocketAsyncEventArgs acceptEventArgs)
+        /// <param name="e"></param>
+        void AcceptEventArg_Completed(object sender, SocketAsyncEventArgs e)
         {
             try
             {
-                ProcessAccept(acceptEventArgs);
+                ProcessAccept(e);
             }
             catch (Exception E)
             {
-                Program.Logger.ErrorFormat("Accept client {0} error, message: {1}", acceptEventArgs.AcceptSocket, E.Message);
+                Program.Logger.ErrorFormat("Accept client {0} error, message: {1}", e.AcceptSocket, E.Message);
                 Program.Logger.Error(E.StackTrace);
             }
         }
@@ -151,19 +150,19 @@ namespace AsyncSocketServer
         /// 因此在Completed事件需要对用户对象进行加锁，避免同一个用户对象同时触发两个Completed事件。
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="asyncEventArgs">SocketAsyncEventArg associated with the completed receive operation</param>
-        void IO_Completed(object sender, SocketAsyncEventArgs asyncEventArgs)
+        /// <param name="e">SocketAsyncEventArg associated with the completed receive operation</param>
+        void IO_Completed(object sender, SocketAsyncEventArgs e)
         {
-            AsyncSocketUserToken userToken = asyncEventArgs.UserToken as AsyncSocketUserToken;
+            AsyncSocketUserToken userToken = e.UserToken as AsyncSocketUserToken;
             userToken.ActiveDateTime = DateTime.Now;
             try
             {
                 lock (userToken)
                 {
-                    if (asyncEventArgs.LastOperation == SocketAsyncOperation.Receive)
-                        ProcessReceive(asyncEventArgs);
-                    else if (asyncEventArgs.LastOperation == SocketAsyncOperation.Send)
-                        ProcessSend(asyncEventArgs);
+                    if (e.LastOperation == SocketAsyncOperation.Receive)
+                        ProcessReceive(e);
+                    else if (e.LastOperation == SocketAsyncOperation.Send)
+                        ProcessSend(e);
                     else
                         throw new ArgumentException("The last operation completed on the socket was not a receive or send");
                 }
@@ -179,17 +178,16 @@ namespace AsyncSocketServer
         /// This method is invoked when an asynchronous receive operation completes. 
         /// 处理接收数据
         /// </summary>
-        /// <param name="receiveEventArgs"></param>
-        private void ProcessReceive(SocketAsyncEventArgs receiveEventArgs)
+        /// <param name="e"></param>
+        private void ProcessReceive(SocketAsyncEventArgs e)
         {
-            AsyncSocketUserToken userToken = receiveEventArgs.UserToken as AsyncSocketUserToken;
+            AsyncSocketUserToken userToken = e.UserToken as AsyncSocketUserToken;
             if (userToken.ConnectSocket == null)
                 return;
             userToken.ActiveDateTime = DateTime.Now;
             if (userToken.ReceiveEventArgs.BytesTransferred > 0 && userToken.ReceiveEventArgs.SocketError == SocketError.Success)
             {
                 int count = userToken.ReceiveEventArgs.BytesTransferred;
-                //如果消息内容>0
                 if (count > 0)
                 {
                     //处理接收数据（写入消息队列）

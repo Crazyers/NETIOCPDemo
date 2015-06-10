@@ -1,0 +1,8 @@
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试-Nginx+MQ\DAL\bin\Debug\DAL.dll.config
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试-Nginx+MQ\DAL\bin\Debug\DAL.dll
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试-Nginx+MQ\DAL\bin\Debug\DAL.pdb
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试-Nginx+MQ\DAL\bin\Debug\Entity.dll
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试-Nginx+MQ\DAL\bin\Debug\Entity.pdb
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试-Nginx+MQ\DAL\obj\Debug\DAL.csprojResolveAssemblyReference.cache
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试-Nginx+MQ\DAL\obj\Debug\DAL.dll
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试-Nginx+MQ\DAL\obj\Debug\DAL.pdb

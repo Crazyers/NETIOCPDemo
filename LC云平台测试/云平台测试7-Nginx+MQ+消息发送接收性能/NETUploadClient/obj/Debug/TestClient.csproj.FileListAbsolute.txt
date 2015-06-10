@@ -1,0 +1,17 @@
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\Bin\NETUploadClient.exe.config
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\Bin\NETUploadClient.exe.manifest
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\Bin\NETUploadClient.application
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\Bin\NETUploadClient.exe
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\Bin\NETUploadClient.pdb
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试-Nginx+MQ\NETUploadClient\obj\Debug\TestClient.csprojResolveAssemblyReference.cache
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试-Nginx+MQ\NETUploadClient\obj\Debug\NETUploadClient.TrustInfo.xml
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试-Nginx+MQ\NETUploadClient\obj\Debug\NETUploadClient.exe.manifest
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试-Nginx+MQ\NETUploadClient\obj\Debug\NETUploadClient.application
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试-Nginx+MQ\NETUploadClient\obj\Debug\NETUploadClient.exe
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试-Nginx+MQ\NETUploadClient\obj\Debug\NETUploadClient.pdb
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试7-Nginx+MQ+消息发送接收性能\NETUploadClient\obj\Debug\TestClient.csprojResolveAssemblyReference.cache
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试7-Nginx+MQ+消息发送接收性能\NETUploadClient\obj\Debug\NETUploadClient.TrustInfo.xml
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试7-Nginx+MQ+消息发送接收性能\NETUploadClient\obj\Debug\NETUploadClient.exe.manifest
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试7-Nginx+MQ+消息发送接收性能\NETUploadClient\obj\Debug\NETUploadClient.application
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试7-Nginx+MQ+消息发送接收性能\NETUploadClient\obj\Debug\NETUploadClient.exe
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试7-Nginx+MQ+消息发送接收性能\NETUploadClient\obj\Debug\NETUploadClient.pdb

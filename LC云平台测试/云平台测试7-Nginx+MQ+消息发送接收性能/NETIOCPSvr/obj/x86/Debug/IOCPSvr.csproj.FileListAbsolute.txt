@@ -1,0 +1,9 @@
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\Bin\SocketAsyncSvr.exe.config
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\Bin\SocketAsyncSvr.exe
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\Bin\SocketAsyncSvr.pdb
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试-Nginx+MQ\NETIOCPSvr\obj\x86\Debug\IOCPSvr.csprojResolveAssemblyReference.cache
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试-Nginx+MQ\NETIOCPSvr\obj\x86\Debug\SocketAsyncSvr.exe
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试-Nginx+MQ\NETIOCPSvr\obj\x86\Debug\SocketAsyncSvr.pdb
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试7-Nginx+MQ+消息发送接收性能\NETIOCPSvr\obj\x86\Debug\IOCPSvr.csprojResolveAssemblyReference.cache
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试7-Nginx+MQ+消息发送接收性能\NETIOCPSvr\obj\x86\Debug\SocketAsyncSvr.exe
+D:\Working\GitHub\NETIOCPDemo\LC云平台测试\云平台测试7-Nginx+MQ+消息发送接收性能\NETIOCPSvr\obj\x86\Debug\SocketAsyncSvr.pdb
